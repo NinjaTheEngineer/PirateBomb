@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FiniteStateMachine : MonoBehaviour
+public class FiniteStateMachine
 {
-    // Start is called before the first frame update
-    void Start()
+    public State currentState { get; private set; } //global get, private set
+
+    public void Initialize(State startingState)
     {
-        
+        currentState = startingState;
+        currentState.Enter();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ChangeState(State newState)
     {
-        
+        currentState.Exit();
+        currentState = newState;
+        currentState.Enter();
     }
 }
