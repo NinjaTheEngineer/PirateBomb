@@ -24,6 +24,11 @@ public class E_BP_IdleState : IdleState
     {
         base.LogicUpdate();
 
+        if (isPlayerInMinAgroRange)
+        {
+            stateMachine.ChangeState(enemy.playerDetectedState);
+        }
+
         if (isIdleTimeOver)
         {
             stateMachine.ChangeState(enemy.moveState);
