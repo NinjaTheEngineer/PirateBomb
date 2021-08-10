@@ -23,11 +23,6 @@ public class E_BP_LookForPlayerState : LookForPlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-    }
-
-    public override void PhysicsUpdate()
-    {
-        base.PhysicsUpdate();
 
         if (isPlayerInMinAgroRange)
         {
@@ -37,6 +32,11 @@ public class E_BP_LookForPlayerState : LookForPlayerState
         {
             stateMachine.ChangeState(enemy.moveState);
         }
+    }
+
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
     }
 
     public override void DoChecks()

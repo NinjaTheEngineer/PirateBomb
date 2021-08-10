@@ -6,13 +6,16 @@ public class Entity : MonoBehaviour
 {
     public FiniteStateMachine stateMachine;
 
+    public Core Core { get; private set; }
+
     public D_Entity entityData;
 
     public int facingDirection { get; private set; }
     public Rigidbody2D rb { get; private set; }
     public Animator anim { get; private set; }
-    
     public GameObject visualGO { get; private set; }
+    public AnimationToStateMachine atsm { get; private set; }
+
 
     [SerializeField]
     private Transform wallCheck;
@@ -29,6 +32,11 @@ public class Entity : MonoBehaviour
     private Vector3 interrogationEffectsStartingPosition;
     private Vector2 velocityWorkspace;
 
+    public virtual void Awake()
+    {
+        Core = GetComponentInChildren<Core>();
+        stateMachine = new FiniteStateMachine();
+    }
     public virtual void Start()
     {
         interrogationEffectsStartingPosition = interrogationEffects.localPosition;
@@ -39,8 +47,8 @@ public class Entity : MonoBehaviour
         visualGO = transform.Find("Visual").gameObject;
         rb = visualGO.GetComponent<Rigidbody2D>();
         anim = visualGO.GetComponent<Animator>();
+        atsm = visualGO.GetComponent<AnimationToStateMachine>();
 
-        stateMachine = new FiniteStateMachine();
     }
 
     public virtual void Update()
@@ -78,6 +86,11 @@ public class Entity : MonoBehaviour
         return Physics2D.Raycast(playerCheck.position, visualGO.transform.right, entityData.maxAgroDistance, entityData.whatIsPlayer);
     }
 
+    public virtual bool CheckPlayerInCloseRangeAction()
+    {
+        return Physics2D.Raycast(playerCheck.position, visualGO.transform.right, entityData.closeRangeActionDistance, entityData.whatIsPlayer);
+    }
+
     public virtual void SetDetectingTargetEffects(bool active)
     {
         interrogationEffects.gameObject.SetActive(active);
@@ -99,16 +112,20 @@ public class Entity : MonoBehaviour
         HandleEffectsPositionOnFlip();
     }
 
-    public virtual void OnDrawGizmos()
-    {
-        Gizmos.DrawLine(wallCheck.position, wallCheck.position + (Vector3)(Vector2.right * facingDirection * entityData.wallCheckDistance));
-        Gizmos.DrawLine(ledgeCheck.position, ledgeCheck.position + (Vector3)(Vector2.down * entityData.ledgeCheckDistance));
-    }
-
     private void HandleEffectsPositionOnFlip()
     {
         interrogationEffects.Rotate(0f, 180f, 0f);
         interrogationEffects.localPosition = new Vector3(-interrogationEffects.localPosition.x, interrogationEffects.localPosition.y, 0f);
+    }
+
+    public virtual void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(wallCheck.position, wallCheck.position + (Vector3)(Vector2.right * facingDirection * entityData.wallCheckDistance));
+        Gizmos.DrawLine(ledgeCheck.position, ledgeCheck.position + (Vector3)(Vector2.down * entityData.ledgeCheckDistance));
+
+        Gizmos.DrawWireSphere(playerCheck.position + (Vector3)(Vector2.right * entityData.closeRangeActionDistance), 0.2f);
+        Gizmos.DrawWireSphere(playerCheck.position + (Vector3)(Vector2.right * entityData.minAgroDistance), 0.2f);
+        Gizmos.DrawWireSphere(playerCheck.position + (Vector3)(Vector2.right * entityData.maxAgroDistance), 0.2f);
     }
 
 }

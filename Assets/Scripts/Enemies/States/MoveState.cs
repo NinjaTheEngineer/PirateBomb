@@ -17,7 +17,7 @@ public class MoveState : State
     public override void Enter()
     {
         base.Enter();
-        entity.SetVelocity(stateData.movementSpeed);
+        core.Movement.SetVelocity(stateData.movementSpeed, entity.facingDirection);
     }
 
     public override void Exit()

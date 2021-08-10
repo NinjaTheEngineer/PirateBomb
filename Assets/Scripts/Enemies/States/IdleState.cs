@@ -20,7 +20,7 @@ public class IdleState : State
     {
         base.Enter();
 
-        entity.SetVelocity(0f);
+        core.Movement.SetVelocityZero();
         isIdleTimeOver = false;
         SetRandomIdleTime();
     }

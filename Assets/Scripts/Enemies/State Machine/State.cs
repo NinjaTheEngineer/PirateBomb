@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class State
 {
+    protected Core core;
+
     protected FiniteStateMachine stateMachine;
     protected Entity entity;
 
@@ -16,6 +18,7 @@ public class State
         this.entity = entity;
         this.stateMachine = stateMachine;
         this.animBoolName = animBoolName;
+        core = entity.Core;
     }
 
     public virtual void Enter()

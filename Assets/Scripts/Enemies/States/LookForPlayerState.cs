@@ -33,7 +33,7 @@ public class LookForPlayerState : State
         lastTurnTime = startTime;
         amountOfTurnsDone = 0;
 
-        entity.SetVelocity(0f);
+        core.Movement.SetVelocityZero();
     }
 
     public override void Exit()

@@ -28,6 +28,13 @@ public class PlayerController : MonoBehaviour
 
     public LayerMask whatIsGround;
 
+    public Core Core { get; private set; }
+
+    private void Awake()
+    {
+        Core = GetComponentInChildren<Core>();
+    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -95,7 +102,7 @@ public class PlayerController : MonoBehaviour
             Flip();
         }
 
-        if(rb.velocity.x >= 0.005f || rb.velocity.x <= -0.005f)
+        if (Mathf.Abs(rb.velocity.x) >= 0.01f)
         {
             isWalking = true;
         }

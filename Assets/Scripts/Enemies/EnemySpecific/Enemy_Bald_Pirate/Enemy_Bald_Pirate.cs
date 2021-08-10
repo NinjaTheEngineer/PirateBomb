@@ -13,6 +13,8 @@ public class Enemy_Bald_Pirate : Entity
 
     public E_BP_LookForPlayerState lookForPlayerState { get; private set; }
 
+    public E_BP_MeleeAttackState meleeAttackState { get; private set; }
+
     [SerializeField]
     private D_IdleState idleStateData;
 
@@ -28,6 +30,13 @@ public class Enemy_Bald_Pirate : Entity
     [SerializeField]
     private D_LookForPlayerState lookForPlayerStateData;
 
+    [SerializeField]
+    private D_MeleeAttackState meleeAttackStateData;
+
+    [SerializeField]
+    private Transform meleeAttackPosition;
+
+
     public override void Start()
     {
         base.Start();
@@ -37,8 +46,10 @@ public class Enemy_Bald_Pirate : Entity
         playerDetectedState = new E_BP_PlayerDetectedState(this, stateMachine, "playerDetected", playerDetectedStateData, this);
         chargeState = new E_BP_ChargeState(this, stateMachine, "charge", chargeStateData, this);
         lookForPlayerState = new E_BP_LookForPlayerState(this, stateMachine, "lookForPlayer", lookForPlayerStateData, this);
+        meleeAttackState = new E_BP_MeleeAttackState(this, stateMachine, "meleeAttack", meleeAttackPosition, meleeAttackStateData, this);
 
         stateMachine.Initialize(idleState);
+
     }
 
     public void ChangeStateToIdleState()
@@ -51,6 +62,13 @@ public class Enemy_Bald_Pirate : Entity
     {
         int rand = Random.Range(0, 100);
         return rand < 50;
+    }
+
+    public override void OnDrawGizmos()
+    {
+        base.OnDrawGizmos();
+
+        Gizmos.DrawWireSphere(meleeAttackPosition.position, meleeAttackStateData.attackRadius);
     }
 
 }

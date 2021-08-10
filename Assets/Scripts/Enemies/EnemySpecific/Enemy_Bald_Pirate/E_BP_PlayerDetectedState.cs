@@ -22,6 +22,7 @@ public class E_BP_PlayerDetectedState : PlayerDetectedState
     public override void Exit()
     {
         Debug.Log("E_BP: 'EXIT' PlayerDetected State");
+        isPlayerDetectedOver = true;
         base.Exit();
     }
 
@@ -29,7 +30,11 @@ public class E_BP_PlayerDetectedState : PlayerDetectedState
     {
         base.LogicUpdate();
 
-        if (performLongRangeAction)
+        if (performCloseRangeAction)
+        {
+            stateMachine.ChangeState(enemy.meleeAttackState);
+        }
+        else if (performLongRangeAction)
         {
             stateMachine.ChangeState(enemy.chargeState);
         }
@@ -37,8 +42,6 @@ public class E_BP_PlayerDetectedState : PlayerDetectedState
         {
             stateMachine.ChangeState(enemy.lookForPlayerState);
         }
-
-        //TODO: Transition to Attack
     }
 
     public override void PhysicsUpdate()
