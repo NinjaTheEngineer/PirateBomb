@@ -9,7 +9,7 @@ public class Enemy_Bald_Pirate : Entity
 
     public E_BP_PlayerDetectedState playerDetectedState { get; private set; }
 
-    public E_BP_ChargeState chargeState { get; private set; }
+    public E_BP_ChaseState ChaseState { get; private set; }
 
     public E_BP_LookForPlayerState lookForPlayerState { get; private set; }
 
@@ -25,7 +25,7 @@ public class Enemy_Bald_Pirate : Entity
     private D_PlayerDetectedState playerDetectedStateData;
 
     [SerializeField]
-    private D_ChargeState chargeStateData;
+    private D_ChaseState ChaseStateData;
 
     [SerializeField]
     private D_LookForPlayerState lookForPlayerStateData;
@@ -44,7 +44,7 @@ public class Enemy_Bald_Pirate : Entity
         moveState = new E_BP_MoveState(this, stateMachine, "move", moveStateData, this, GetComponent<Timer>());
         idleState = new E_BP_IdleState(this, stateMachine, "idle", idleStateData, this);
         playerDetectedState = new E_BP_PlayerDetectedState(this, stateMachine, "playerDetected", playerDetectedStateData, this);
-        chargeState = new E_BP_ChargeState(this, stateMachine, "charge", chargeStateData, this);
+        ChaseState = new E_BP_ChaseState(this, stateMachine, "charge", ChaseStateData, this);
         lookForPlayerState = new E_BP_LookForPlayerState(this, stateMachine, "lookForPlayer", lookForPlayerStateData, this);
         meleeAttackState = new E_BP_MeleeAttackState(this, stateMachine, "meleeAttack", meleeAttackPosition, meleeAttackStateData, this);
 
@@ -70,5 +70,4 @@ public class Enemy_Bald_Pirate : Entity
 
         Gizmos.DrawWireSphere(meleeAttackPosition.position, meleeAttackStateData.attackRadius);
     }
-
 }

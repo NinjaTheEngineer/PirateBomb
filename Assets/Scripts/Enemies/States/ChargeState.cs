@@ -2,27 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChargeState : State
+public class ChaseState : State
 {
-    protected D_ChargeState stateData;
+    protected D_ChaseState stateData;
 
     protected bool isPlayerInMinAgroRange;
-    protected bool isDetectingLedge;
+    protected bool isDetectingGround;
     protected bool isDetectingWall;
+    protected bool isDetectingUpperLedge;
+    protected bool isDetectingFloorLedge;
+    protected bool isRotating;
+    protected bool isInTheAir;
+
     protected bool performCloseRangeAction;
+    protected bool playerJumpAboveCheck; 
 
-    protected bool isChargeTimeOver;
+    protected bool isJumping;
 
-    public ChargeState(Entity entity, FiniteStateMachine stateMachine, string animBoolName, D_ChargeState stateData) : base(entity, stateMachine, animBoolName)
+    protected bool ischaseTimeOver;
+
+    public ChaseState(Entity entity, FiniteStateMachine stateMachine, string animBoolName, D_ChaseState stateData) : base(entity, stateMachine, animBoolName)
     {
         this.stateData = stateData;
     }
     public override void Enter()
     {
         base.Enter();
-
-        isChargeTimeOver = false;
-        core.Movement.SetVelocity(stateData.chargeSpeed, entity.facingDirection);
+        isRotating = false;
+        ischaseTimeOver = false;
+        core.Movement.SetVelocity(stateData.chaseSpeed, entity.facingDirection);
     }
 
     public override void Exit()
@@ -34,24 +42,54 @@ public class ChargeState : State
     {
         base.LogicUpdate();
 
-        if(Time.time >= startTime + stateData.chargeTime)
+        if(Time.time >= startTime + stateData.chaseTime)
         {
-            isChargeTimeOver = true;
+            ischaseTimeOver = true;
         }
+
+        if(playerJumpAboveCheck && !entity.isRotating)
+        {
+            entity.isRotating = true;
+            Debug.Log("Player Jumped Above");
+            entity.RotateEnemy(stateData.chaseSpeed);
+        }
+
     }
 
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+
+        if (isDetectingUpperLedge)
+        {
+            Jump();
+        }
+
+        if (isDetectingGround)
+        {
+            core.Movement.SetVelocity(stateData.chaseSpeed, entity.facingDirection);
+        }
+    }
+
+    public void Jump()
+    {
+        core.Movement.SetVelocity(stateData.jumpSpeed, stateData.jumpAngle, entity.facingDirection);
     }
 
     public override void DoChecks()
     {
         base.DoChecks();
         isDetectingWall = entity.CheckWall();
-        isDetectingLedge = entity.CheckLedge();
+        isDetectingGround = entity.CheckGround();
+        isDetectingFloorLedge = entity.CheckFloorLedge();
+        isDetectingUpperLedge = entity.CheckUpperLedge();
         isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
+        playerJumpAboveCheck = entity.CheckPlayerJumpAbove();
+        isInTheAir = entity.CheckIfInTheAir();
 
         performCloseRangeAction = entity.CheckPlayerInCloseRangeAction();
+
+        entity.anim.SetFloat("yVelocity", entity.rb.velocity.y);
+        entity.anim.SetBool("isGrounded", isDetectingGround || !isInTheAir);
     }
 }

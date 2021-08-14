@@ -6,7 +6,12 @@ using UnityEngine;
 public class D_Entity : ScriptableObject
 {
     public float wallCheckDistance = 0.2f;
-    public float ledgeCheckDistance = 0.4f;
+    public float groundCheckDistance = 0.4f;
+
+    public float upperLedgeCheckDistance = 0.4f;
+    public float floorLedgeCheckDistance = 0.4f;
+
+    public float playerJumpAboveDistance = 2f;
 
     public float minAgroDistance = 3f;
     public float maxAgroDistance = 4f;

@@ -10,7 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d39c84b1c8ab644aa960e37b9c93167, type: 3}
-  m_Name: E_BP_ChargeState
+  m_Name: E_BP_ChaseState
   m_EditorClassIdentifier: 
-  chargeSpeed: 2
-  chargeTime: 3
+  chaseSpeed: 2
+  chaseTime: 10
+  jumpSpeed: 6.4
+  jumpAngle: {x: 1, y: 8}

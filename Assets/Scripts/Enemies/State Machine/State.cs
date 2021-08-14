@@ -10,6 +10,7 @@ public class State
     protected Entity entity;
 
     protected float startTime;
+    protected float lastRotateTime;
 
     protected string animBoolName;
 
@@ -24,6 +25,7 @@ public class State
     public virtual void Enter()
     {
         startTime = Time.time;
+        lastRotateTime = startTime;
         entity.anim.SetBool(animBoolName, true);
         DoChecks();
     }

@@ -30,7 +30,7 @@ public class E_BP_MeleeAttackState : MeleeAttackState
     {
         if (isPlayerInminAgroRange)
         {
-            stateMachine.ChangeState(enemy.chargeState);
+            stateMachine.ChangeState(enemy.ChaseState);
         }
         base.FinishAttack();
     }

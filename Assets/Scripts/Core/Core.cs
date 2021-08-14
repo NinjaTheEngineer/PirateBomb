@@ -18,6 +18,11 @@ public class Core : MonoBehaviour
         }
     }
 
+    public void LogicUpdate()
+    {
+        Movement.LogicUpdate();
+    }
+
     public GameObject GetVisualGO()
     {
         return visualGO != null ? visualGO : null;

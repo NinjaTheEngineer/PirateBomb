@@ -36,7 +36,7 @@ public class E_BP_PlayerDetectedState : PlayerDetectedState
         }
         else if (performLongRangeAction)
         {
-            stateMachine.ChangeState(enemy.chargeState);
+            stateMachine.ChangeState(enemy.ChaseState);
         }
         else if (!isPlayerInMaxAgroRange)
         {
