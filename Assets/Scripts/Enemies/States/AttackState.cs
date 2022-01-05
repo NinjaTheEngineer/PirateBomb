@@ -7,7 +7,10 @@ public class AttackState : State
     protected Transform attackPosition;
 
     protected bool isAnimationFinished;
-    protected bool isPlayerInminAgroRange;
+    protected bool isPlayerInMinAgroRange;
+    protected bool isPlayerInMaxAgroRange;
+    protected bool isBombInMinAgroRange;
+    protected bool playerJumpedAbove;
 
     public AttackState(Entity entity, FiniteStateMachine stateMachine, string animBoolName, Transform attackPosition) : base(entity, stateMachine, animBoolName)
     {
@@ -26,7 +29,10 @@ public class AttackState : State
     {
         base.DoChecks();
 
-        isPlayerInminAgroRange = entity.CheckPlayerInMinAgroRange();
+        isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
+        isPlayerInMaxAgroRange = entity.CheckPlayerInMaxAgroRange();
+        isBombInMinAgroRange = entity.CheckBombInMinAgroRange();
+        playerJumpedAbove = entity.CheckPlayerJumpAbove();
     }
 
     public override void LogicUpdate()
@@ -46,7 +52,6 @@ public class AttackState : State
 
     public virtual void TriggerAttack()
     {
-
     }
 
     public virtual void FinishAttack()

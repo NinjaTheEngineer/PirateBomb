@@ -7,12 +7,16 @@ public class Core : MonoBehaviour
     public GameObject visualGO;
 
     public Movement Movement { get; private set; }
+    public Combat Combat { get; private set; }
+    public CollisionSenses CollisionSenses { get; private set; }
 
     private void Awake()
     {
         Movement = GetComponentInChildren<Movement>();
+        Combat = GetComponentInChildren<Combat>();
+        CollisionSenses = GetComponentInChildren<CollisionSenses>();
 
-        if (!Movement)
+        if (!Movement || !Combat)
         {
             Debug.LogError("Missing Core Component");
         }
@@ -21,6 +25,7 @@ public class Core : MonoBehaviour
     public void LogicUpdate()
     {
         Movement.LogicUpdate();
+        Combat.LogicUpdate();
     }
 
     public GameObject GetVisualGO()

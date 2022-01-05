@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - Bomb
+  - Object
   layers:
   - Default
   - TransparentFX
@@ -17,9 +19,9 @@ TagManager:
   - Damagable
   - Ground
   - Player
-  - 
-  - 
-  - 
+  - Bomb
+  - Object
+  - Push
   - 
   - 
   - 
@@ -45,6 +47,12 @@ TagManager:
   - name: Background
     uniqueID: 3676518051
     locked: 0
+  - name: Objects
+    uniqueID: 2823587717
+    locked: 0
+  - name: Light
+    uniqueID: 3673275883
+    locked: 0
   - name: Foreground
     uniqueID: 2883532931
     locked: 0
@@ -53,6 +61,9 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 1425473973
+    locked: 0
+  - name: Bomb
+    uniqueID: 3552739283
     locked: 0
   - name: Effects
     uniqueID: 2255412557

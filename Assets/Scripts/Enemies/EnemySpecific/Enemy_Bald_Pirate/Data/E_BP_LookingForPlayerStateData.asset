@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: E_BP_LookingForPlayerStateData
   m_EditorClassIdentifier: 
   amountOfTurns: 3
-  timeBetweenTurns: 0.7
+  timeBetweenTurns: 0.4

@@ -14,6 +14,8 @@ public class Enemy_Bald_Pirate : Entity
     public E_BP_LookForPlayerState lookForPlayerState { get; private set; }
 
     public E_BP_MeleeAttackState meleeAttackState { get; private set; }
+    public E_BP_StunState stunState { get; private set; }
+    public E_BP_DeadState deadState { get; private set; }
 
     [SerializeField]
     private D_IdleState idleStateData;
@@ -41,12 +43,14 @@ public class Enemy_Bald_Pirate : Entity
     {
         base.Start();
 
-        moveState = new E_BP_MoveState(this, stateMachine, "move", moveStateData, this, GetComponent<Timer>());
+        moveState = new E_BP_MoveState(this, stateMachine, "move", moveStateData, this);
         idleState = new E_BP_IdleState(this, stateMachine, "idle", idleStateData, this);
         playerDetectedState = new E_BP_PlayerDetectedState(this, stateMachine, "playerDetected", playerDetectedStateData, this);
         ChaseState = new E_BP_ChaseState(this, stateMachine, "charge", ChaseStateData, this);
         lookForPlayerState = new E_BP_LookForPlayerState(this, stateMachine, "lookForPlayer", lookForPlayerStateData, this);
         meleeAttackState = new E_BP_MeleeAttackState(this, stateMachine, "meleeAttack", meleeAttackPosition, meleeAttackStateData, this);
+        stunState = new E_BP_StunState(this, stateMachine, this,"knockback");
+        deadState = new E_BP_DeadState(this, stateMachine, "dead", this);
 
         stateMachine.Initialize(idleState);
 
@@ -69,5 +73,16 @@ public class Enemy_Bald_Pirate : Entity
         base.OnDrawGizmos();
 
         Gizmos.DrawWireSphere(meleeAttackPosition.position, meleeAttackStateData.attackRadius);
+    }
+
+    public override void Knockback(float knockbackStrength, Vector2 bombPosition)
+    {
+        base.Knockback(knockbackStrength, bombPosition);
+        stateMachine.ChangeState(stunState);
+    }
+
+    public override void Damage(float amount)
+    {
+        base.Damage(amount);
     }
 }

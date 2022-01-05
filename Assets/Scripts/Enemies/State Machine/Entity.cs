@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Entity : MonoBehaviour
+public class Entity : MonoBehaviour, IKnockbackable, IDamageable
 {
     public FiniteStateMachine stateMachine;
 
@@ -10,13 +10,15 @@ public class Entity : MonoBehaviour
 
     public D_Entity entityData;
 
+    public float currentHealth;
     public int facingDirection { get; private set; }
     public bool isRotating { get;  set; }
+
+    public bool isPlayerAlive { get; set; }
     public Rigidbody2D rb { get; private set; }
     public Animator anim { get; private set; }
     public GameObject visualGO { get; private set; }
     public AnimationToStateMachine atsm { get; private set; }
-
 
     [SerializeField]
     private Transform wallCheck;
@@ -39,18 +41,7 @@ public class Entity : MonoBehaviour
     [SerializeField]
     private Transform interrogationEffects;
 
-    [SerializeField]
-    private bool bUpperLedge;
-
-    [SerializeField]
-    private bool bFloorLedge;
-
-    [SerializeField]
-    private bool bCheckWall;
-
-    [SerializeField]
-    private bool bCheckGround;
-
+    private bool isInTheAir;
 
     private Vector3 interrogationEffectsStartingPosition;
     private Vector2 velocityWorkspace;
@@ -62,14 +53,16 @@ public class Entity : MonoBehaviour
     }
     public virtual void Start()
     {
+        isPlayerAlive = true;
+        EventManager.OnPlayerDeath += PlayerIsDead;
         interrogationEffectsStartingPosition = interrogationEffects.localPosition;
         SetDetectingTargetEffects(false);
 
-        facingDirection = 1;
         isRotating = false;
 
+        currentHealth = entityData.maxHealthAmount;
         visualGO = transform.Find("Visual").gameObject;
-        rb = visualGO.GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
         anim = visualGO.GetComponent<Animator>();
         atsm = visualGO.GetComponent<AnimationToStateMachine>();
 
@@ -79,6 +72,14 @@ public class Entity : MonoBehaviour
     {
         Core.LogicUpdate();
         stateMachine.currentState.LogicUpdate();
+        UpdateAnimations();
+    }
+
+    private void UpdateAnimations()
+    {
+        isInTheAir = CheckIfInTheAir();
+        anim.SetBool("isGrounded", Core.CollisionSenses.Ground && !isInTheAir);
+        anim.SetBool("isPlayerAlive", isPlayerAlive);
     }
 
     public virtual void FixedUpdate()
@@ -92,55 +93,55 @@ public class Entity : MonoBehaviour
         rb.velocity = velocityWorkspace;
     }
 
-    public virtual bool CheckWall()
-    {
-        return bCheckWall = Physics2D.Raycast(wallCheck.position, transform.right * facingDirection, entityData.wallCheckDistance, entityData.whatIsGround);
-    }
-
-    public virtual bool CheckGround()
-    {
-        return bCheckGround = Physics2D.Raycast(groundCheck.position, Vector2.down, entityData.groundCheckDistance, entityData.whatIsGround);
-    }
-    public virtual bool CheckUpperLedge()
-    {
-        return bUpperLedge = (!Physics2D.Raycast(upperLedgeCheck.position, transform.right * facingDirection, entityData.upperLedgeCheckDistance, entityData.whatIsGround) &&
-            CheckWall() && CheckGround());
-    }
-
-    public virtual bool CheckFloorLedge()
-    {
-        return bFloorLedge = (!Physics2D.Raycast(floorLedgeCheck.position, Vector2.down, entityData.floorLedgeCheckDistance, entityData.whatIsGround) &&
-            CheckGround());
-    }
     public virtual bool CheckPlayerJumpAbove()
     {
-        return Physics2D.Raycast(floorLedgeCheck.position, Vector2.up, entityData.playerJumpAboveDistance, entityData.whatIsPlayer);
+        return Physics2D.Raycast(playerJumpAboveCheck.position, Vector2.up, entityData.playerJumpAboveDistance, entityData.whatIsPlayer);
     }
 
     public virtual bool CheckPlayerInMinAgroRange()
     {
-        return Physics2D.Raycast(playerCheck.position, visualGO.transform.right, entityData.minAgroDistance, entityData.whatIsPlayer);
+        if(Physics2D.Raycast(playerCheck.position, visualGO.transform.right, entityData.minAgroDistance, entityData.whatIsPlayer) && isPlayerAlive)
+        {
+            float distance = Physics2D.Raycast(playerCheck.position, visualGO.transform.right, entityData.minAgroDistance, entityData.whatIsPlayer).distance;
+            return !Core.CollisionSenses.WallBeforePlayer(distance);
+        }
+        else
+        {
+            return false;
+        }
     }
     public virtual bool CheckPlayerInMaxAgroRange()
     {
-        return Physics2D.Raycast(playerCheck.position, visualGO.transform.right, entityData.maxAgroDistance, entityData.whatIsPlayer);
+        return (Physics2D.CircleCast(playerCheck.position, entityData.maxAgroDistance, visualGO.transform.right, entityData.whatIsPlayer) && isPlayerAlive);
+    }
+    public virtual bool CheckBombInMinAgroRange()
+    {
+        return (Physics2D.Raycast(playerCheck.position, visualGO.transform.right, entityData.minAgroDistance, entityData.whatIsBomb));
+    }
+    public virtual bool CheckBombInMaxAgroRange()
+    {
+        return (Physics2D.CircleCast(playerCheck.position, entityData.bombMaxAgroRange, visualGO.transform.right, entityData.whatIsBomb));
     }
 
     public virtual bool CheckPlayerInCloseRangeAction()
     {
         return Physics2D.Raycast(playerCheck.position, visualGO.transform.right, entityData.closeRangeActionDistance, entityData.whatIsPlayer);
     }
+    public virtual bool CheckBombInCloseRangeAction()
+    {
+        return Physics2D.Raycast(playerCheck.position, visualGO.transform.right, entityData.closeRangeActionDistance, entityData.whatIsBomb);
+    }
 
     public virtual bool CheckIfInTheAir()
     {
-        return rb.velocity.y != 0;
+        return !(Core.Movement.CurrentVelocity.y <= 0.005f && Core.Movement.CurrentVelocity.y >= -0.005f);
     }
 
     public virtual void SetDetectingTargetEffects(bool active)
     {
         interrogationEffects.gameObject.SetActive(active);
 
-        if (facingDirection.Equals(1))
+        if (Core.Movement.FacingDirection.Equals(1))
         {
             interrogationEffects.localPosition = interrogationEffectsStartingPosition;
         }
@@ -152,13 +153,12 @@ public class Entity : MonoBehaviour
 
     public virtual void Jump()
     {
-            rb.velocity = new Vector2(rb.velocity.x, 6.25f);
+        rb.velocity = new Vector2(rb.velocity.x, 6.25f);
     }
 
     public virtual void Flip()
     {
-        facingDirection *= -1;
-        visualGO.transform.Rotate(0f, 180f, 0f);
+        Core.Movement.Flip();
         HandleEffectsPositionOnFlip();
     }
 
@@ -177,8 +177,8 @@ public class Entity : MonoBehaviour
 
     private void HandleEffectsPositionOnFlip()
     {
-        interrogationEffects.Rotate(0f, 180f, 0f);
         interrogationEffects.localPosition = new Vector3(-interrogationEffects.localPosition.x, interrogationEffects.localPosition.y, 0f);
+        interrogationEffects.Rotate(0f, 180f, 0f);
     }
 
     public virtual void OnDrawGizmos()
@@ -191,9 +191,23 @@ public class Entity : MonoBehaviour
         
         Gizmos.DrawLine(floorLedgeCheck.position, floorLedgeCheck.position + (Vector3)(Vector2.down * entityData.floorLedgeCheckDistance));
 
-        //Gizmos.DrawWireSphere(playerCheck.position + (Vector3)(Vector2.right * entityData.closeRangeActionDistance), 0.2f);
-        //Gizmos.DrawWireSphere(playerCheck.position + (Vector3)(Vector2.right * entityData.minAgroDistance), 0.2f);
-        //Gizmos.DrawWireSphere(playerCheck.position + (Vector3)(Vector2.right * entityData.maxAgroDistance), 0.2f);
+        Gizmos.DrawWireSphere(playerCheck.position + (Vector3)(Vector2.right * entityData.closeRangeActionDistance), 0.2f);
+        Gizmos.DrawWireSphere(playerCheck.position + (Vector3)(Vector2.right * entityData.minAgroDistance), 0.2f);
+        Gizmos.DrawWireSphere(playerCheck.position + (Vector3)(Vector2.right), entityData.maxAgroDistance);
     }
 
+    public virtual void Damage(float amount)
+    {
+        currentHealth -= amount;
+    }
+    public virtual void Knockback(float knockbackStrength, Vector2 bombPosition)
+    {
+        Core.Combat.Knockback(knockbackStrength, bombPosition);
+    }
+
+    public void PlayerIsDead()
+    {
+        isPlayerAlive = false;
+        EventManager.OnPlayerDeath -= PlayerIsDead;
+    }
 }

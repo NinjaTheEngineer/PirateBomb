@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b0d780e162c2d446a1b3f7a0d31fc20, type: 3}
   m_Name: E_BP_MeleeAttackStateData
   m_EditorClassIdentifier: 
-  attackDamage: 10
+  attackDamage: 1
   attackRadius: 0.35
+  knockbackStrength: 5
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 1024
+  whatIsBomb:
+    serializedVersion: 2
+    m_Bits: 2048

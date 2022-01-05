@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06654755b57e19340974b6957eb16b5b, type: 3}
   m_Name: E_BP_BaseData
   m_EditorClassIdentifier: 
-  wallCheckDistance: 0.5
+  maxHealthAmount: 3
+  wallCheckDistance: 0.45
   groundCheckDistance: 0.4
   upperLedgeCheckDistance: 0.5
   floorLedgeCheckDistance: 0.4
   playerJumpAboveDistance: 2
-  minAgroDistance: 3
+  bombMaxAgroRange: 3
+  minAgroDistance: 2
   maxAgroDistance: 4
   closeRangeActionDistance: 0.45
   whatIsGround:
@@ -26,3 +28,6 @@ MonoBehaviour:
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 1024
+  whatIsBomb:
+    serializedVersion: 2
+    m_Bits: 2048

@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="newEntityData", menuName = "Data/Entity Data/Base Data")]
 public class D_Entity : ScriptableObject
 {
+    public float maxHealthAmount;
+
     public float wallCheckDistance = 0.2f;
     public float groundCheckDistance = 0.4f;
 
@@ -12,6 +14,7 @@ public class D_Entity : ScriptableObject
     public float floorLedgeCheckDistance = 0.4f;
 
     public float playerJumpAboveDistance = 2f;
+    public float bombMaxAgroRange = 3f;
 
     public float minAgroDistance = 3f;
     public float maxAgroDistance = 4f;
@@ -20,5 +23,6 @@ public class D_Entity : ScriptableObject
 
     public LayerMask whatIsGround;
     public LayerMask whatIsPlayer;
+    public LayerMask whatIsBomb;
 
 }

@@ -9,6 +9,8 @@ public class IdleState : State
     protected bool flipAfterIdle;
     protected bool isIdleTimeOver;
     protected bool isPlayerInMinAgroRange;
+    protected bool isBombInMinAgroRange;
+    protected bool isBombInMaxAgroRange;
 
     protected float idleTime;
 
@@ -49,6 +51,8 @@ public class IdleState : State
     {
         base.PhysicsUpdate();
         isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
+        isBombInMinAgroRange = entity.CheckBombInMinAgroRange();
+        isBombInMaxAgroRange = entity.CheckBombInMaxAgroRange();
     }
     public override void DoChecks()
     {

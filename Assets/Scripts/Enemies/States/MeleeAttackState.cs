@@ -5,6 +5,8 @@ using UnityEngine;
 public class MeleeAttackState : AttackState
 {
     protected D_MeleeAttackState stateData;
+    protected bool playerJumpedAboveWhileAttacking;
+    protected bool playerIsDead;
 
     protected AttackDetails attackDetails;
     public MeleeAttackState(Entity entity, FiniteStateMachine stateMachine, string animBoolName, Transform attackPosition, D_MeleeAttackState stateData) : base(entity, stateMachine, animBoolName, attackPosition)
@@ -14,6 +16,10 @@ public class MeleeAttackState : AttackState
 
     public override void DoChecks()
     {
+        if (playerJumpedAbove)
+        {
+            playerJumpedAboveWhileAttacking = true;
+        }
         base.DoChecks();
     }
 
@@ -33,6 +39,12 @@ public class MeleeAttackState : AttackState
     public override void FinishAttack()
     {
         base.FinishAttack();
+
+        if (playerJumpedAboveWhileAttacking)
+        {
+            entity.Flip();
+            playerJumpedAboveWhileAttacking = false;
+        }
     }
 
     public override void LogicUpdate()
@@ -49,11 +61,38 @@ public class MeleeAttackState : AttackState
     {
         base.TriggerAttack();
 
-        Collider2D[] detectedObjects = Physics2D.OverlapCircleAll(attackPosition.position, stateData.attackRadius, stateData.whatIsPlayer);
-
-        foreach (Collider2D collider in detectedObjects)
+        Collider2D[] detectedPlayer = Physics2D.OverlapCircleAll(attackPosition.position, stateData.attackRadius, stateData.whatIsPlayer);
+        Collider2D[] detectedBomb = Physics2D.OverlapCircleAll(attackPosition.position, stateData.attackRadius, stateData.whatIsBomb);
+        
+        foreach (Collider2D collider in detectedPlayer)
         {
-            collider.transform.SendMessage("Damage", attackDetails);
+            IDamageable damageable = collider.GetComponent<IDamageable>();
+
+            if (damageable != null)
+            {
+                damageable.Damage(stateData.attackDamage);
+            }
+
+            //IKnockbackable knockbackable = collider.GetComponent<IKnockbackable>();
+            IDefaultKnockback knockbackable = collider.GetComponent<IDefaultKnockback>();
+
+            if (knockbackable != null)
+            {
+                //knockbackable.Knockback(stateData.knockbackStrength, attackPosition.position);
+                knockbackable.Knockback(core.Movement.FacingDirection);
+            }
+        }
+
+        foreach(Collider2D collider in detectedBomb)
+        {
+            Debug.Log("Bomb detected!");
+            IDefaultKnockback knockbackable = collider.GetComponent<IDefaultKnockback>();
+
+            if (knockbackable != null)
+            {
+                Debug.Log("Knockbar Bomb");
+                knockbackable.Knockback(core.Movement.FacingDirection);
+            }
         }
     }
 }

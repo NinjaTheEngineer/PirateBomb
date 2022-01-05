@@ -9,6 +9,7 @@ public class LookForPlayerState : State
     protected bool turnImmediately;
 
     protected bool isPlayerInMinAgroRange;
+    protected bool isBombInMinAgroRange;
     protected bool isAllTurnsDone;
     protected bool isAllTurnsTimeDone;
 
@@ -23,17 +24,21 @@ public class LookForPlayerState : State
 
     public override void Enter()
     {
-        base.Enter();
-
-        entity.SetDetectingTargetEffects(true);
+        if (entity.isPlayerAlive)
+        {
+            base.Enter();
         
-        isAllTurnsDone = false;
-        isAllTurnsTimeDone = false;
+            entity.SetDetectingTargetEffects(true);
 
-        lastTurnTime = startTime;
-        amountOfTurnsDone = 0;
+            isAllTurnsDone = false;
+            isAllTurnsTimeDone = false;
+
+            lastTurnTime = startTime;
+            amountOfTurnsDone = 0;
+        }
 
         core.Movement.SetVelocityZero();
+
     }
 
     public override void Exit()
@@ -79,6 +84,7 @@ public class LookForPlayerState : State
     {
         base.DoChecks();
         isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
+        isBombInMinAgroRange = entity.CheckBombInMinAgroRange();
     }
 
     public void SetTurnImmediately(bool turn)

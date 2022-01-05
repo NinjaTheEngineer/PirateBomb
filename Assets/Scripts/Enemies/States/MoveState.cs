@@ -9,6 +9,7 @@ public class MoveState : State
     protected bool isDetectingWall;
     protected bool isDetectingGround;
     protected bool isPlayerInMinAgroRange;
+    protected bool isBombInMinAgroRange;
     public MoveState(Entity entity, FiniteStateMachine stateMachine, string animBoolName, D_MoveState stateData) : base(entity, stateMachine, animBoolName)
     {
         this.stateData = stateData;
@@ -17,7 +18,7 @@ public class MoveState : State
     public override void Enter()
     {
         base.Enter();
-        core.Movement.SetVelocity(stateData.movementSpeed, entity.facingDirection);
+        core.Movement.SetVelocity(stateData.movementSpeed, core.Movement.FacingDirection);
     }
 
     public override void Exit()
@@ -38,8 +39,9 @@ public class MoveState : State
     {
         base.DoChecks();
 
-        isDetectingWall = entity.CheckWall();
-        isDetectingGround = entity.CheckGround();
+        isDetectingWall = core.CollisionSenses.WallFront;
+        isDetectingGround = core.CollisionSenses.Ground;
         isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
+        isBombInMinAgroRange = entity.CheckBombInMinAgroRange();
     }
 }
