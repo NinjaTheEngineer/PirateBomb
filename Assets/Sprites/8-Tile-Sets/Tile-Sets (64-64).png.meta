@@ -7,19 +7,19 @@ TextureImporter:
     second: Tile-Sets (64-64)_0
   - first:
       213: 7677746386170045030
-    second: Tile-Sets (64-64)_1
+    second: 4
   - first:
       213: 1946782611979153331
     second: Tile-Sets (64-64)_2
   - first:
       213: 6006599754692465794
-    second: Tile-Sets (64-64)_3
+    second: 1
   - first:
       213: 5597233533788714312
-    second: Tile-Sets (64-64)_4
+    second: 2
   - first:
       213: -6147209319500292149
-    second: Tile-Sets (64-64)_5
+    second: 3
   - first:
       213: 217210847207515910
     second: Tile-Sets (64-64)_6
@@ -31,31 +31,31 @@ TextureImporter:
     second: Tile-Sets (64-64)_8
   - first:
       213: 3003509796074811516
-    second: Tile-Sets (64-64)_9
+    second: 11
   - first:
       213: -5756038519620357816
-    second: Tile-Sets (64-64)_10
+    second: 22
   - first:
       213: -6829316275817730238
-    second: Tile-Sets (64-64)_11
+    second: 33
   - first:
       213: -7546071762092457313
     second: Tile-Sets (64-64)_12
   - first:
       213: -5488903456777471993
-    second: Tile-Sets (64-64)_13
+    second: 5
   - first:
       213: -2016735203541663436
     second: Tile-Sets (64-64)_14
   - first:
       213: -7794487633252970421
-    second: Tile-Sets (64-64)_15
+    second: 111
   - first:
       213: 7788719308430720360
-    second: Tile-Sets (64-64)_16
+    second: 222
   - first:
       213: 8321722199012383440
-    second: Tile-Sets (64-64)_17
+    second: 333
   - first:
       213: -8064304383430041218
     second: Tile-Sets (64-64)_18
@@ -369,8 +369,8 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: 0
-    aniso: -1
-    mipBias: -100
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -391,6 +391,8 @@ TextureImporter:
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
@@ -445,7 +447,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -458,7 +460,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tile-Sets (64-64)_1
+      name: 4
       rect:
         serializedVersion: 2
         x: 64
@@ -466,7 +468,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -487,7 +489,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -500,7 +502,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tile-Sets (64-64)_3
+      name: 1
       rect:
         serializedVersion: 2
         x: 192
@@ -508,7 +510,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -521,7 +523,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tile-Sets (64-64)_4
+      name: 2
       rect:
         serializedVersion: 2
         x: 256
@@ -529,7 +531,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -542,15 +544,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tile-Sets (64-64)_5
+      name: 3
       rect:
         serializedVersion: 2
         x: 320
-        y: 256
+        y: 255
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -571,7 +573,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -592,7 +594,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -613,7 +615,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -626,7 +628,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tile-Sets (64-64)_9
+      name: 11
       rect:
         serializedVersion: 2
         x: 192
@@ -634,7 +636,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -647,7 +649,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tile-Sets (64-64)_10
+      name: 22
       rect:
         serializedVersion: 2
         x: 256
@@ -655,7 +657,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -668,7 +670,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tile-Sets (64-64)_11
+      name: 33
       rect:
         serializedVersion: 2
         x: 320
@@ -676,7 +678,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -697,7 +699,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -710,7 +712,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tile-Sets (64-64)_13
+      name: 5
       rect:
         serializedVersion: 2
         x: 64
@@ -718,7 +720,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -739,7 +741,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -752,15 +754,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tile-Sets (64-64)_15
+      name: 111
       rect:
         serializedVersion: 2
         x: 192
-        y: 128
+        y: 127
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -773,7 +775,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tile-Sets (64-64)_16
+      name: 222
       rect:
         serializedVersion: 2
         x: 256
@@ -781,7 +783,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -794,15 +796,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tile-Sets (64-64)_17
+      name: 333
       rect:
         serializedVersion: 2
         x: 320
-        y: 128
+        y: 129
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -823,7 +825,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -844,7 +846,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -865,7 +867,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -886,7 +888,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -907,7 +909,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -928,7 +930,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -949,7 +951,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -970,7 +972,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -991,7 +993,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1012,7 +1014,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1033,7 +1035,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1054,7 +1056,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
