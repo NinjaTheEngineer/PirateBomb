@@ -9,7 +9,7 @@ public class PushObjects : MonoBehaviour
     {
         parentObject = GetComponentInParent<EnvironmentObject>();
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision) //Push objects by enemies player or bombs
     {
         GameObject collider = collision.gameObject;
         if (collider.CompareTag("Enemy") || collider.CompareTag("Player") || collider.CompareTag("Bomb"))

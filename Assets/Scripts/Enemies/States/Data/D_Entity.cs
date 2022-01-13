@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName ="newEntityData", menuName = "Data/Entity Data/Base Data")]
-public class D_Entity : ScriptableObject
+public class D_Entity : ScriptableObject //Entity data
 {
-    public float maxHealthAmount;
+    public int maxHealthAmount;
 
     public float wallCheckDistance = 0.2f;
     public float groundCheckDistance = 0.4f;

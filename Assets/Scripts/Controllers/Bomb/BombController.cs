@@ -8,7 +8,7 @@ public class BombController : MonoBehaviour, IKnockbackable, IDefaultKnockback
     public Rigidbody2D rb;
     private Vector2 explosionOrigin;
 
-    public float bombDamage = 1f;
+    public int bombDamage = 1;
     public float knockbackStrength = 10f;
     public float maxVelocity;
     
@@ -32,18 +32,18 @@ public class BombController : MonoBehaviour, IKnockbackable, IDefaultKnockback
 
 
 
-    private void Awake()
+    private void Awake() //Set max velocity
     {
         SetMaxVelocity(maxVelocity);
     }
 
-    private void Start()
+    private void Start() //Initialize variables
     {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         collider2D = GetComponent<Collider2D>();
     }
-    private void Update()
+    private void Update() //Initialize detonation timer
     {
         timeToDetonate -= Time.deltaTime;
         if (timeToDetonate < 0 && !exploding)
@@ -51,7 +51,7 @@ public class BombController : MonoBehaviour, IKnockbackable, IDefaultKnockback
             StartExplosion();
         }
     }
-    private void FixedUpdate()
+    private void FixedUpdate() //Handles physics
     {
         rbVelocity = rb.velocity;
 
@@ -61,12 +61,12 @@ public class BombController : MonoBehaviour, IKnockbackable, IDefaultKnockback
         }
     }
 
-    public void SetMaxVelocity(float maxVelocity)
+    public void SetMaxVelocity(float maxVelocity) //Sets max velocity
     {
         this.maxVelocity = maxVelocity;
         sqrMaxVelocity = maxVelocity * maxVelocity;
     }
-    public void StartExplosion()
+    public void StartExplosion() //Starts the explosion
     {
         transform.localRotation = Quaternion.identity;
         rb.rotation = 0f;
@@ -77,7 +77,7 @@ public class BombController : MonoBehaviour, IKnockbackable, IDefaultKnockback
         CameraShake.Instance.ShakeCamera(0.75f, 0.2f, false);
         Detonate();
     }
-    public void LaunchBomb(float force, int facingDirection)
+    public void LaunchBomb(float force, int facingDirection) //Handles the bomb launch
     {
         Vector2 rbVelocity = new Vector2(launchAngle.x * force * facingDirection, launchAngle.y * force);
         Debug.Log("[Bomb]: launchAngle.x => " + launchAngle.x);
@@ -86,7 +86,7 @@ public class BombController : MonoBehaviour, IKnockbackable, IDefaultKnockback
         rb.velocity = rbVelocity;
     }
 
-    public void Knockback(float knockbackStrength, Vector2 bombPosition)
+    public void Knockback(float knockbackStrength, Vector2 bombPosition) //Handles the bomb being knockbacked
     {
         Vector2 angle = new Vector2(bombPosition.x - transform.position.x, transform.position.y - bombPosition.y).normalized;
         Vector2 rbVelocity;
@@ -110,7 +110,7 @@ public class BombController : MonoBehaviour, IKnockbackable, IDefaultKnockback
         }
     }
 
-    public void Knockback(int facingDirection)
+    public void Knockback(int facingDirection) //Addes the knockback to the bomb
     {
         Vector2 rbVelocity;
 
@@ -122,12 +122,13 @@ public class BombController : MonoBehaviour, IKnockbackable, IDefaultKnockback
         }
     }
 
-    private bool TargetAndBombHaveSameHeight(Vector2 targetPosition, Vector2 bombPosition)
+    private bool TargetAndBombHaveSameHeight(Vector2 targetPosition, Vector2 bombPosition) //Check if target and bomb at the same height
     {
         return bombPosition.y + 1 > targetPosition.y;
     }
-    private void Detonate()
+    private void Detonate() //Detonate bomb
     {
+        SoundManager.Instance.PlayBombExplode();
         Collider2D[] detectedObjects = Physics2D.OverlapCircleAll(rb.position, explosionRadius);
 
         foreach (Collider2D collider in detectedObjects)
@@ -154,12 +155,12 @@ public class BombController : MonoBehaviour, IKnockbackable, IDefaultKnockback
         }
     }
 
-    public void Destroy()
+    public void Destroy() //Destroy the object
     {
         Destroy(gameObject);
     }
 
-    private void OnDrawGizmos()
+    private void OnDrawGizmos() //Debug purpose
     {
         Gizmos.DrawWireSphere(rb.position, explosionRadius);
         Gizmos.DrawWireSphere(explosionOrigin, 0.25f);

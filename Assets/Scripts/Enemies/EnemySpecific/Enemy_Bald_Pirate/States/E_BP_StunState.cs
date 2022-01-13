@@ -17,6 +17,7 @@ public class E_BP_StunState : StunState
 
     public override void Enter()
     {
+        SoundManager.Instance.PlayPirateHit();
         base.Enter();
     }
 

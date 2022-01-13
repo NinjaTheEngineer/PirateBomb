@@ -5,12 +5,11 @@ using UnityEngine;
 public class Core : MonoBehaviour
 {
     public GameObject visualGO;
-
     public Movement Movement { get; private set; }
     public Combat Combat { get; private set; }
     public CollisionSenses CollisionSenses { get; private set; }
 
-    private void Awake()
+    private void Awake() //Initialize components
     {
         Movement = GetComponentInChildren<Movement>();
         Combat = GetComponentInChildren<Combat>();
@@ -22,7 +21,7 @@ public class Core : MonoBehaviour
         }
     }
 
-    public void LogicUpdate()
+    public void LogicUpdate() //Logic update, same has an Update of Monobehaviour
     {
         Movement.LogicUpdate();
         Combat.LogicUpdate();

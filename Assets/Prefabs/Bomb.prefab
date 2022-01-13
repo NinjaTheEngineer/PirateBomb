@@ -103,12 +103,12 @@ MonoBehaviour:
   bombDamage: 1
   knockbackStrength: 6
   maxVelocity: 6
-  timeToDetonate: 1.25
+  timeToDetonate: 1.5
   extraDetonateTime: 0.5
   explosionRadius: 1
-  defaultKnockbackAngle: {x: 3, y: 4}
+  defaultKnockbackAngle: {x: 3, y: 3}
   xDetonationPowerAmp: 1.5
-  yDetonationPowerAmp: 1.75
+  yDetonationPowerAmp: 1.33
   launchAngle: {x: 2.3, y: 3}
 --- !u!114 &53825932088256109
 MonoBehaviour:

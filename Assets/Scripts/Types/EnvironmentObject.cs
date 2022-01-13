@@ -13,12 +13,12 @@ public class EnvironmentObject : MonoBehaviour, IKnockbackable
     public Rigidbody2D rb { get; private set; }
     private Vector2 rbVelocity;
 
-    private void Start()
+    private void Start() //Get rb for the object
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    public void Knockback(float knockbackStrength, Vector2 knockbackPosition)
+    public void Knockback(float knockbackStrength, Vector2 knockbackPosition) //Handle knockback
     {
         Vector2 position = transform.position;
         Vector2 angle = new Vector2(position.x - knockbackPosition.x, position.y - knockbackPosition.y).normalized;
@@ -42,7 +42,7 @@ public class EnvironmentObject : MonoBehaviour, IKnockbackable
         }
     }
 
-    private bool TargetAndBombHaveSameHeight(Vector2 targetPosition, Vector2 originPosition)
+    private bool TargetAndBombHaveSameHeight(Vector2 targetPosition, Vector2 originPosition) //Check if at same position as target
     {
         return originPosition.y + 1 > targetPosition.y;
     }

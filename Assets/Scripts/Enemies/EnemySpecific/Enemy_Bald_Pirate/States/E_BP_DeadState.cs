@@ -18,6 +18,7 @@ public class E_BP_DeadState : DeadState
 
     public override void Enter()
     {
+        SoundManager.Instance.PlayPirateDead();
         base.Enter();
     }
 

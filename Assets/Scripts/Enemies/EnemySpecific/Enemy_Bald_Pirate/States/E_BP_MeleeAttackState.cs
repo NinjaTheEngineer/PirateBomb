@@ -65,6 +65,7 @@ public class E_BP_MeleeAttackState : MeleeAttackState
 
     public override void TriggerAttack()
     {
+        SoundManager.Instance.PlayPirateKick();
         base.TriggerAttack();
     }
 }

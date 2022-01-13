@@ -308,7 +308,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2667656260995594217}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.39, y: -0.1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2667656261802621177}
@@ -503,7 +503,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2667656261770708694}
   - component: {fileID: 2667656261770708695}
-  - component: {fileID: 2667656261770708693}
   - component: {fileID: 2667656261770708692}
   - component: {fileID: 2667656261770708699}
   m_Layer: 8
@@ -557,36 +556,6 @@ MonoBehaviour:
   lookForPlayerStateData: {fileID: 11400000, guid: 399ce8adb0cbd864eb15df901b56a403, type: 2}
   meleeAttackStateData: {fileID: 11400000, guid: b38c4b45c6003ba4fa9f33eba355bcae, type: 2}
   meleeAttackPosition: {fileID: 2667656260358479060}
---- !u!114 &2667656261770708693
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2667656261770708688}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3670518ce3d1064992e9bbd187f0483, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  duration: 1
-  startOnStart: 0
-  detonateOnDestroy: 0
-  onTimerEnd:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2667656261770708695}
-        m_TargetAssemblyTypeName: Enemy_Bald_Pirate, Assembly-CSharp
-        m_MethodName: ChangeStateToIdleState
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!61 &2667656261770708692
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -600,7 +569,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -5.42, y: -0.16251361}
+  m_Offset: {x: -0.027217388, y: -0.052340627}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -611,7 +580,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.46000004, y: 0.88502717}
+  m_Size: {x: 0.480937, y: 0.8808398}
   m_EdgeRadius: 0
 --- !u!50 &2667656261770708699
 Rigidbody2D:

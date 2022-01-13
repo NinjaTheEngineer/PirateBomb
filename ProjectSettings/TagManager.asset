@@ -8,6 +8,8 @@ TagManager:
   - Bomb
   - Object
   - Keybind
+  - ExitDoor
+  - VolumeSlider
   layers:
   - Default
   - TransparentFX
@@ -23,7 +25,7 @@ TagManager:
   - Bomb
   - Object
   - Push
-  - 
+  - ExitDoor
   - 
   - 
   - 
@@ -68,4 +70,7 @@ TagManager:
     locked: 0
   - name: Effects
     uniqueID: 2255412557
+    locked: 0
+  - name: ExitDoor
+    uniqueID: 640130767
     locked: 0

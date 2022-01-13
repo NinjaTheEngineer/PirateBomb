@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "newMeleeAttackState", menuName = "Data/State Data/Melee AttackState")]
 public class D_MeleeAttackState : ScriptableObject
 {
-    public float attackDamage = 1f;
+    public int attackDamage = 1;
     public float attackRadius = 0.5f;
 
     public float knockbackStrength = 1f;

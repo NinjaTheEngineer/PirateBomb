@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy_Bald_Pirate : Entity
 {
+    public E_BP_TutorialState tutorialState { get; private set; }
     public E_BP_IdleState idleState { get; private set; }
     public E_BP_MoveState moveState { get; private set; }
 
@@ -43,6 +44,7 @@ public class Enemy_Bald_Pirate : Entity
     {
         base.Start();
 
+        tutorialState = new E_BP_TutorialState(this, stateMachine, "tutorial", this);
         moveState = new E_BP_MoveState(this, stateMachine, "move", moveStateData, this);
         idleState = new E_BP_IdleState(this, stateMachine, "idle", idleStateData, this);
         playerDetectedState = new E_BP_PlayerDetectedState(this, stateMachine, "playerDetected", playerDetectedStateData, this);
@@ -52,27 +54,21 @@ public class Enemy_Bald_Pirate : Entity
         stunState = new E_BP_StunState(this, stateMachine, this,"knockback");
         deadState = new E_BP_DeadState(this, stateMachine, "dead", this);
 
-        stateMachine.Initialize(idleState);
+        if (GameManager.Instance.IsTutorial())
+        {
+            stateMachine.Initialize(tutorialState);
+            Flip();
+        }
+        else
+        {
+            stateMachine.Initialize(idleState);
+        }
 
     }
 
     public void ChangeStateToIdleState()
     {
-        idleState.SetFlipAfterIdle(GetRandomChance());
         stateMachine.ChangeState(idleState);
-    }
-
-    private bool GetRandomChance()
-    {
-        int rand = Random.Range(0, 100);
-        return rand < 50;
-    }
-
-    public override void OnDrawGizmos()
-    {
-        base.OnDrawGizmos();
-
-        Gizmos.DrawWireSphere(meleeAttackPosition.position, meleeAttackStateData.attackRadius);
     }
 
     public override void Knockback(float knockbackStrength, Vector2 bombPosition)
@@ -81,8 +77,15 @@ public class Enemy_Bald_Pirate : Entity
         stateMachine.ChangeState(stunState);
     }
 
-    public override void Damage(float amount)
+    public override void Damage(int amount)
     {
         base.Damage(amount);
+    }
+
+    public override void OnDrawGizmos()
+    {
+        base.OnDrawGizmos();
+
+        Gizmos.DrawWireSphere(meleeAttackPosition.position, meleeAttackStateData.attackRadius);
     }
 }

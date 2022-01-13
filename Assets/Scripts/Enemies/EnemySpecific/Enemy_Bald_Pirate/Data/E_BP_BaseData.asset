@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06654755b57e19340974b6957eb16b5b, type: 3}
   m_Name: E_BP_BaseData
   m_EditorClassIdentifier: 
-  maxHealthAmount: 3
+  maxHealthAmount: 2
   wallCheckDistance: 0.45
   groundCheckDistance: 0.4
   upperLedgeCheckDistance: 0.5

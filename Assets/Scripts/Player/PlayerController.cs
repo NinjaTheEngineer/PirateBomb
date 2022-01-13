@@ -7,12 +7,12 @@ using TMPro;
 public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDefaultKnockback
 {
     #region Variables
-    private float movementInputDirection;
 
     public TextMeshProUGUI healthText;
 
     private int amountOfJumpsLeft;
     private int amountOfBombsLeft;
+    private int healthAmount;
 
     private float bombsRefreshTimeLeft;
     private float holdDownStartTime;
@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDef
     private float walkTimeStarted;
     private float walkEffectCd = 0.5f;
     private float knockbackStartTime;
+    private float movementInputDirection;
 
     private bool holdingBomb = false;
     private bool isFacingRight = true;
@@ -32,8 +33,12 @@ public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDef
     private bool canMove = true;
     private bool isHit = false;
     private bool isAlive = true;
+    private bool isAtExitDoor = false;
+    private bool enteredLevel = false;
+    private bool exitingLevel = false;
 
     private Vector2 rbVelocity;
+    private Animator exitDoor;
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -41,16 +46,17 @@ public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDef
     public int amountOfJumps;
     public int amountOfBombs;
 
-    public float healthAmount = 5f;
+    public int healthAmountMax = 3;
 
-    public float bombsRefreshTime = 2f;
+    public float bombsRefreshTime = 1.25f;
     public float minHoldDownTime = 0.25f;
     public float maxHoldDownTime = 2.5f;
     public float maxBombForce = 2f;
 
     public float movementSpeed = 5.0f;
     public float jumpForce = 16.0f;
-    public float groundCheckRadius;
+    public float groundCheckRadius = 0.125f;
+    public float exitDoorCheckRadius = 0.05f;
     public float variableJumpHeightMultiplier = 0.5f;
 
     public float knockbackDuration = 0.75f;
@@ -58,6 +64,7 @@ public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDef
     public float yKnockbackMultiplier = 1f;
 
     public Transform groundCheck;
+    public Transform exitDoorCheck;
     public Transform bombPlacement;
     public Transform jumpEffectPosition;
     public Transform fallEffectPosition;
@@ -70,6 +77,7 @@ public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDef
     public GameObject runEffectPrefab;
 
     public LayerMask whatIsGround;
+    public LayerMask whatIsExitDoor;
     public Vector2 defaultKnockbackAngle = Vector2.zero;
 
     public EventManager eventManager;
@@ -78,38 +86,44 @@ public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDef
 
     private void Awake()
     {
-        Core = GetComponentInChildren<Core>();
+        Core = GetComponentInChildren<Core>(); //Initialize Core
     }
 
-    void Start()
+    void Start() //Initialize default settings and fetch objects
     {
+        exitDoor = GameObject.FindGameObjectWithTag("ExitDoor").GetComponent<Animator>();
         bombsRefreshTimeLeft = bombsRefreshTime;
+        amountOfBombsLeft = amountOfBombs;
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        anim.SetBool("isHidden", true);
         amountOfJumpsLeft = amountOfJumps;
+        healthAmount = healthAmountMax;
     }
 
-    void Update()
+    void Update() //Handles all the logic
     {
         CheckInput();
         CheckMovementDirection();
         UpdateAnimations();
         CheckIfCanJump();
         RefreshBombsAmount();
+        enteredLevel = GameManager.Instance.GameStarted;
     }
 
-    private void FixedUpdate()
+    private void FixedUpdate() //Handles all physics and detections
     {
         ApplyMovement();
         CheckSurroundings();
         CheckKnockback();
     }
 
-    private void CheckSurroundings()
+    private void CheckSurroundings() //Checks if player is grounded or near the exit door
     {
         if(rb.velocity.y <= 0.01f)
         {
             isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
+            isAtExitDoor = Physics2D.OverlapCircle(exitDoorCheck.position, exitDoorCheckRadius, whatIsExitDoor);
             if (isGrounded)
             {
                 isHit = false;
@@ -120,7 +134,7 @@ public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDef
             }
         }
     }
-    private void CheckIfCanJump()
+    private void CheckIfCanJump() //Checks if the player can jump
     {
         if (isGrounded && rb.velocity.y <= 0)
         {
@@ -143,43 +157,77 @@ public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDef
         }
     }
 
-    private void RefreshBombsAmount()
+    private void RefreshBombsAmount() //Refreshs the amounts of bombs available, updates it with the UIManager
     {
-        bombsRefreshTimeLeft -= Time.deltaTime;
-
-        if(bombsRefreshTimeLeft < 0 && amountOfBombsLeft < amountOfBombs)
+        if(amountOfBombsLeft < amountOfBombs)
         {
-            bombsRefreshTimeLeft = bombsRefreshTime;
-            amountOfBombsLeft++;
+            bombsRefreshTimeLeft -= Time.deltaTime;
+            UIManager.Instance.UpdateBombReloadTime((bombsRefreshTime - bombsRefreshTimeLeft) / bombsRefreshTime);
+            if (bombsRefreshTimeLeft < 0 && amountOfBombsLeft < amountOfBombs)
+            {
+                bombsRefreshTimeLeft = bombsRefreshTime;
+                amountOfBombsLeft++;
+                UIManager.Instance.UpdateBombAmount(amountOfBombsLeft);
+            }
+        }
+        else
+        {
+            UIManager.Instance.UpdateBombReloadTime(1f);
         }
     }
-    private void CheckInput()
+    private void CheckInput() //Handles all input detection and functions
     {
-        if (isAlive && canMove)
+        if (Input.GetKey(KeybindManager.Instance.Keybinds["Pause"]))
         {
-            movementInputDirection = Input.GetAxisRaw("Horizontal");
-
-            if (Input.GetButtonDown("Jump"))
+            GameManager.Instance.OpenOptionsMenu();
+        }
+        if (isAlive && canMove && enteredLevel && !exitingLevel)
+        {
+            if (Input.GetKey(KeybindManager.Instance.Keybinds["Left"]))
             {
+                movementInputDirection = -1;
+            }
+            else if (Input.GetKey(KeybindManager.Instance.Keybinds["Right"]))
+            {
+                movementInputDirection = 1;
+            }
+            else
+            {
+                movementInputDirection = 0;
+            }
+
+            if (Input.GetKeyDown(KeybindManager.Instance.Keybinds["Jump"]))
+            {
+                SoundManager.Instance.PlayPlayerJump();
                 Jump();
             }
 
-            if (Input.GetButtonUp("Jump"))
+            if (Input.GetKeyUp(KeybindManager.Instance.Keybinds["Jump"]))
             {
                 rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * variableJumpHeightMultiplier);
             }
 
-            if (Input.GetButtonDown("Bomb"))
+            if (Input.GetKeyDown(KeybindManager.Instance.Keybinds["Bomb"]))
             {
+                if (isAtExitDoor)
+                {
+                    anim.SetTrigger("doorIn");
+                    exitDoor.SetTrigger("open");
+                    exitingLevel = true;
+                    rb.velocity = Vector2.zero;
+                    SoundManager.Instance.PlayDoorOpen();
+                    Invoke("ExitLevel", 0.75f);
+                    return;
+                }
                 if (amountOfBombsLeft > 0) { 
                     holdDownStartTime = Time.time;
                     holdingBomb = true;
                 }
             }
 
-            if (Input.GetButtonUp("Bomb"))
+            if (Input.GetKeyUp(KeybindManager.Instance.Keybinds["Bomb"]))
             {
-                if(holdingBomb){
+                if (holdingBomb){
                     PlaceBomb(holdDownTime);
                     holdingBomb = false;
                 }
@@ -187,7 +235,12 @@ public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDef
         }
         
     }
-    private void CheckMovementDirection()
+    private void ExitLevel() //Loads next scene when player enters a door
+    {
+        LevelLoader.Instance.LoadNextScene();
+    }
+
+    private void CheckMovementDirection() //Handles the movement direction and effects
     {
         if(isFacingRight && movementInputDirection < 0)
         {
@@ -213,11 +266,16 @@ public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDef
             isWalking = false;
         }
     }
-    private void ApplyMovement()
+    private void ApplyMovement() //Applies the movement for when the player can move
     {
-        if (!isAlive && isGrounded && !isKnockbackActive)
+        if (!isAlive && isGrounded && !isKnockbackActive || exitingLevel)
         {
             rb.velocity = Vector2.zero;
+            if (exitingLevel)
+            {
+                return;
+            }
+            SoundManager.Instance.PlayPlayerDead();
             return;
         }
 
@@ -225,12 +283,13 @@ public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDef
             rb.velocity = new Vector2(movementSpeed * movementInputDirection, rb.velocity.y);
     }
 
-    private void PlaceBomb(float holdDownTime)
+    private void PlaceBomb(float holdDownTime) //Place or throws the bomb
     {
         if(amountOfBombsLeft > 0)
         {
             BombController bombPlaced = Instantiate(bombPrefab, bombPlacement.position, Quaternion.identity).GetComponent<BombController>();
             amountOfBombsLeft--;
+            UIManager.Instance.UpdateBombAmount(amountOfBombsLeft);
 
             if (holdDownTime >= minHoldDownTime)
             {
@@ -241,20 +300,20 @@ public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDef
         }
     }
 
-    private float CalculateHoldDownForce(float holdTime)
+    private float CalculateHoldDownForce(float holdTime) //Calculates throw force with the amount or time the throw button was held
     {
         float holdTimeNormalized = Mathf.Clamp01(holdTime / maxHoldDownTime);
         Debug.Log("CalculateHoldDownForce -> " + holdTimeNormalized);
         return holdTimeNormalized * maxBombForce;
     }
 
-    private void Flip()
+    private void Flip() //Flips the player
     {
         isFacingRight = !isFacingRight;
         transform.Rotate(0.0f, 180f, 0f);
     }
 
-    private void Jump()
+    private void Jump() //Vertical jump
     {
         if (canJump)
         {
@@ -266,7 +325,7 @@ public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDef
         }
     }
 
-    private void UpdateAnimations()
+    private void UpdateAnimations() //Updates all the animations
     {
         anim.SetBool("walking", isWalking);
         anim.SetBool("isGrounded", isGrounded);
@@ -275,10 +334,11 @@ public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDef
         anim.SetBool("isAlive", isAlive);
         anim.SetBool("canMove", canMove);
         anim.SetFloat("yVelocity", rb.velocity.y);
+        anim.SetBool("isHidden", !enteredLevel);
         HandleBombBarAnimations();
         HandleRunningEffect();
     }
-    private void HandleBombBarAnimations()
+    private void HandleBombBarAnimations() //Handles the bomb force bar animation
     {
         if (holdingBomb)
         {
@@ -289,7 +349,7 @@ public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDef
             }
         }
     }
-    private void HandleRunningEffect()
+    private void HandleRunningEffect() //Handles the running animation
     {
         if (isWalking && isGrounded && isAlive)
         {
@@ -302,13 +362,13 @@ public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDef
             }
         }
     }
-    private void OnDrawGizmos()
+    private void OnDrawGizmos() //For debugging purposes
     {
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
-    public void Knockback(float knockbackStrength, Vector2 knockbackOriginPosition)
+    public void Knockback(float knockbackStrength, Vector2 knockbackOriginPosition) //Handles the knockback applied to the player, either from bombs or pirate
     {
-        if (!isKnockbackActive)
+        if (!isKnockbackActive && !exitingLevel)
         {
 
             Vector2 position = transform.position;
@@ -335,11 +395,11 @@ public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDef
             holdBarObject.BombReleased();
         }
     }
-    public bool IsAlive()
+    public bool IsAlive() //Returns if the player is alive
     {
         return isAlive;
     }
-    public void ApplyKnockback()
+    public void ApplyKnockback() //Applies the knockback to the rigidbody
     {
         Debug.Log("KNOCKBACK Angle : " + rbVelocity);
         rb.velocity = Vector2.zero;
@@ -348,14 +408,16 @@ public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDef
         rb.velocity = rbVelocity;
         canMove = false;
     }
-    public void Damage(float amount)
+    public void Damage(int amount) //Damage the player
     {
+        SoundManager.Instance.PlayPlayerHit();
         isHit = true;
         healthAmount -= amount;
-        healthText.SetText("HEALTH: " + healthAmount);
+        UIManager.Instance.UpdatePlayerHealth(healthAmount);
         Debug.Log("HEALTH: " + healthAmount);
         if (healthAmount <= 0f)
         {
+            GameManager.Instance.GameOver();
             eventManager.BroadCastPlayerDeath();
             isAlive = false;
             canMove = false;
@@ -378,7 +440,7 @@ public class PlayerController : MonoBehaviour, IKnockbackable, IDamageable, IDef
 
     public void Knockback(int facingDirection)
     {
-        if (!isKnockbackActive)
+        if (!isKnockbackActive && !exitingLevel)
         {
 
             if (!rb.bodyType.Equals(2))

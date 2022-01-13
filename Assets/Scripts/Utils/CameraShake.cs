@@ -11,13 +11,13 @@ public class CameraShake : MonoBehaviour
     private float shakeTimerTotal;
     private float startingIntensity;
     private bool decay;
-    private void Awake()
+    private void Awake() //Get cinemachine and singleton
     {
         Instance = this;
         cinemachineVirtualCamera = GetComponent<CinemachineVirtualCamera>();
     }
 
-    public void ShakeCamera(float intensity, float time, bool decay)
+    public void ShakeCamera(float intensity, float time, bool decay) //Shake camera effect with cinemachine
     {
         CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin =
             cinemachineVirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
@@ -28,7 +28,7 @@ public class CameraShake : MonoBehaviour
         shakeTimer = time;
     }
 
-    private void Update()
+    private void Update() //Update logic for the effect
     {
         if(shakeTimer > 0)
         {

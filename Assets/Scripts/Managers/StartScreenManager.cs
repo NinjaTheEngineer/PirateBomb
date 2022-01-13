@@ -18,8 +18,7 @@ public class StartScreenManager : MonoBehaviour
 
 
     private int lastNumber;
-
-    private void Update()
+    private void Update() //Logic update, wait for Space to start game
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -27,8 +26,9 @@ public class StartScreenManager : MonoBehaviour
         }
     }
 
-    public void GoToMainMenu()
+    public void GoToMainMenu() //Handle the main menu screen presentation
     {
+        SoundManager.Instance.PlayBombExplode();
         titleTextAnim.SetBool("MainMenu", true);
         titleBombAnim.SetBool("MainMenu", true);
         titlePirateAnim.SetBool("MainMenu", true);
@@ -39,22 +39,34 @@ public class StartScreenManager : MonoBehaviour
         Invoke("SnipRandomPirate", 0.9f);
     }
 
-    private void DeactivateTitleScreen()
+    private void DeactivateTitleScreen() //Deactive title screen
     {
         titleScreen.SetActive(false);
     }
 
-    private void ShowMainMenu()
+    private void ShowMainMenu() //Shows the main menu
     {
         mainMenuScreen.SetActive(true);
     }
-    private void ActivateMenuTitle()
+    private void ActivateMenuTitle() //Activates the menu title animation
     {
         mainMenuTitleAnimator.enabled = true;
     }
 
-    public void OpenOptionsMenu()
+    public void GoToGameScene() //Start the game tutorial
     {
+        SoundManager.Instance.PlayButtonClick();
+        LevelLoader.Instance.LoadNextScene();
+    }
+    public void ExitGame() //Exit Game
+    {
+        SoundManager.Instance.PlayButtonClick();
+        Application.Quit();
+    }
+
+    public void OpenOptionsMenu() //Open options menu in main menu
+    {
+        SoundManager.Instance.PlayButtonClick();
         optionsMenu.SetActive(true);
         optionsPanel.SetActive(true);
         CanvasRenderer canvas = optionsPanel.GetComponent<CanvasRenderer>();
@@ -63,14 +75,14 @@ public class StartScreenManager : MonoBehaviour
         StartCoroutine(LerpPosition(optionsMenu, new Vector2(optionsMenu.transform.position.x, 525f), 0.35f));
         StartCoroutine(LerpFunction(canvas, 0.66f, 0.33f));
     }
-    public void CloseOptionsMenu()
+    public void CloseOptionsMenu() //Close the options menu
     {
         StartCoroutine(DeactivateOptionsMenu());
         StartCoroutine(DeactivateOptionsBackground());
         StartCoroutine(LerpPosition(optionsMenu, new Vector2(optionsMenu.transform.position.x, -525f), 0.35f));
         StartCoroutine(LerpFunction(optionsPanel.GetComponent<CanvasRenderer>(), 0f, 0.33f));
     }
-    IEnumerator LerpPosition(GameObject objectMoving, Vector2 targetPosition, float duration)
+    IEnumerator LerpPosition(GameObject objectMoving, Vector2 targetPosition, float duration) //Lerp function of the options menu
     {
         float time = 0;
         Vector2 startPosition = objectMoving.transform.position;
@@ -84,7 +96,7 @@ public class StartScreenManager : MonoBehaviour
         objectMoving.transform.position = targetPosition;
     }
 
-    IEnumerator LerpFunction(CanvasRenderer elementToFade, float endValue, float duration)
+    IEnumerator LerpFunction(CanvasRenderer elementToFade, float endValue, float duration) //Lerp function for the options background fade
     {
         float time = 0;
         float startValue = elementToFade.GetAlpha();
@@ -99,20 +111,20 @@ public class StartScreenManager : MonoBehaviour
         elementToFade.SetAlpha(endValue);
     }
 
-    private IEnumerator DeactivateOptionsBackground()
+    private IEnumerator DeactivateOptionsBackground() //Deactive the options backgroun
     {
         yield return new WaitForSeconds(0.4f);
         optionsPanel.SetActive(false);
     }
 
 
-    private IEnumerator DeactivateOptionsMenu()
+    private IEnumerator DeactivateOptionsMenu() //Deactive the options menu
     {
         yield return new WaitForSeconds(0.4f);
         optionsMenu.SetActive(false);
     }
 
-    private void SnipRandomPirate()
+    private void SnipRandomPirate() //Handle the pirates looking in the main menu
     {
         int randomNumber = UnityEngine.Random.Range(1, 4);
 
@@ -139,7 +151,7 @@ public class StartScreenManager : MonoBehaviour
                 break;
         }
     }
-    private IEnumerator DisablePirate(int number)
+    private IEnumerator DisablePirate(int number) //Disable the pirate that peeked and choose another
     {
         yield return new WaitForSeconds(2f);
 

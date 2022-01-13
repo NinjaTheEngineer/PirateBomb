@@ -14,7 +14,7 @@ public class State
 
     protected string animBoolName;
 
-    public State(Entity entity, FiniteStateMachine stateMachine, string animBoolName)
+    public State(Entity entity, FiniteStateMachine stateMachine, string animBoolName) //State contructor
     {
         this.entity = entity;
         this.stateMachine = stateMachine;
@@ -22,7 +22,7 @@ public class State
         core = entity.Core;
     }
 
-    public virtual void Enter()
+    public virtual void Enter() //Like a state Start() method
     {
         startTime = Time.time;
         lastRotateTime = startTime;
@@ -30,20 +30,20 @@ public class State
         DoChecks();
     }
 
-    public virtual void Exit()
+    public virtual void Exit() //Exit method 
     {
         entity.anim.SetBool(animBoolName, false);
     }
-    public virtual void LogicUpdate()
+    public virtual void LogicUpdate() //Update method, logic update
     {
 
     }
-    public virtual void PhysicsUpdate()
+    public virtual void PhysicsUpdate() //Physics update
     {
         DoChecks();
     }
 
-    public virtual void DoChecks()
+    public virtual void DoChecks() //Do Physics checks
     {
 
     }

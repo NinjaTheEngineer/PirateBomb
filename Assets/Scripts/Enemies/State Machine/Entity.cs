@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Entity : MonoBehaviour, IKnockbackable, IDamageable
+public class Entity : MonoBehaviour, IKnockbackable, IDamageable //Class for any enemy
 {
     public FiniteStateMachine stateMachine;
-
     public Core Core { get; private set; }
 
     public D_Entity entityData;
 
-    public float currentHealth;
+    public int currentHealth;
     public int facingDirection { get; private set; }
     public bool isRotating { get;  set; }
 
@@ -46,12 +45,12 @@ public class Entity : MonoBehaviour, IKnockbackable, IDamageable
     private Vector3 interrogationEffectsStartingPosition;
     private Vector2 velocityWorkspace;
 
-    public virtual void Awake()
+    public virtual void Awake() //Initialize Core and FSM
     {
         Core = GetComponentInChildren<Core>();
         stateMachine = new FiniteStateMachine();
     }
-    public virtual void Start()
+    public virtual void Start() //Initialize variables and effects
     {
         isPlayerAlive = true;
         EventManager.OnPlayerDeath += PlayerIsDead;
@@ -68,37 +67,37 @@ public class Entity : MonoBehaviour, IKnockbackable, IDamageable
 
     }
 
-    public virtual void Update()
+    public virtual void Update() //Update Logic
     {
         Core.LogicUpdate();
         stateMachine.currentState.LogicUpdate();
         UpdateAnimations();
     }
 
-    private void UpdateAnimations()
+    private void UpdateAnimations() //Updates animations 
     {
         isInTheAir = CheckIfInTheAir();
         anim.SetBool("isGrounded", Core.CollisionSenses.Ground && !isInTheAir);
         anim.SetBool("isPlayerAlive", isPlayerAlive);
     }
 
-    public virtual void FixedUpdate()
+    public virtual void FixedUpdate() //Physics update
     {
         stateMachine.currentState.PhysicsUpdate();
     }
 
-    public virtual void SetVelocity(float velocity)
+    public virtual void SetVelocity(float velocity) //Sets velocity to the entity
     {
         velocityWorkspace.Set(facingDirection * velocity, rb.velocity.y);
         rb.velocity = velocityWorkspace;
     }
 
-    public virtual bool CheckPlayerJumpAbove()
+    public virtual bool CheckPlayerJumpAbove() //Check if the player jumped above
     {
         return Physics2D.Raycast(playerJumpAboveCheck.position, Vector2.up, entityData.playerJumpAboveDistance, entityData.whatIsPlayer);
     }
 
-    public virtual bool CheckPlayerInMinAgroRange()
+    public virtual bool CheckPlayerInMinAgroRange() //Check if player in min distance to do something
     {
         if(Physics2D.Raycast(playerCheck.position, visualGO.transform.right, entityData.minAgroDistance, entityData.whatIsPlayer) && isPlayerAlive)
         {
@@ -110,35 +109,39 @@ public class Entity : MonoBehaviour, IKnockbackable, IDamageable
             return false;
         }
     }
-    public virtual bool CheckPlayerInMaxAgroRange()
+    public virtual bool CheckPlayerInMaxAgroRange() //Check if palyer in max distance to do something
     {
         return (Physics2D.CircleCast(playerCheck.position, entityData.maxAgroDistance, visualGO.transform.right, entityData.whatIsPlayer) && isPlayerAlive);
     }
-    public virtual bool CheckBombInMinAgroRange()
+    public virtual bool CheckBombInMinAgroRange() //Check if bomb in min distance to do something
     {
         return (Physics2D.Raycast(playerCheck.position, visualGO.transform.right, entityData.minAgroDistance, entityData.whatIsBomb));
     }
-    public virtual bool CheckBombInMaxAgroRange()
+    public virtual bool CheckBombInMaxAgroRange() //Check if bomb in max distance to do something
     {
         return (Physics2D.CircleCast(playerCheck.position, entityData.bombMaxAgroRange, visualGO.transform.right, entityData.whatIsBomb));
     }
 
-    public virtual bool CheckPlayerInCloseRangeAction()
+    public virtual bool CheckPlayerInCloseRangeAction() //Check if player in range for close action
     {
         return Physics2D.Raycast(playerCheck.position, visualGO.transform.right, entityData.closeRangeActionDistance, entityData.whatIsPlayer);
     }
-    public virtual bool CheckBombInCloseRangeAction()
+    public virtual bool CheckBombInCloseRangeAction() //Check if bomb in range for close action
     {
         return Physics2D.Raycast(playerCheck.position, visualGO.transform.right, entityData.closeRangeActionDistance, entityData.whatIsBomb);
     }
 
-    public virtual bool CheckIfInTheAir()
+    public virtual bool CheckIfInTheAir() //Check if isn't grounded
     {
         return !(Core.Movement.CurrentVelocity.y <= 0.005f && Core.Movement.CurrentVelocity.y >= -0.005f);
     }
 
-    public virtual void SetDetectingTargetEffects(bool active)
+    public virtual void SetDetectingTargetEffects(bool active) //Set detecting target effects
     {
+        if (active)
+        {
+            SoundManager.Instance.PlayPirateHm();
+        }
         interrogationEffects.gameObject.SetActive(active);
 
         if (Core.Movement.FacingDirection.Equals(1))
@@ -151,22 +154,22 @@ public class Entity : MonoBehaviour, IKnockbackable, IDamageable
         }
     }
 
-    public virtual void Jump()
+    public virtual void Jump() //Jump
     {
         rb.velocity = new Vector2(rb.velocity.x, 6.25f);
     }
 
-    public virtual void Flip()
+    public virtual void Flip() //Flip character
     {
         Core.Movement.Flip();
         HandleEffectsPositionOnFlip();
     }
 
-    public virtual void RotateEnemy(float chaseSpeed)
+    public virtual void RotateEnemy(float chaseSpeed) //Rotate enemy
     {
         StartCoroutine(IERotateEnemy(chaseSpeed));
     }
-    IEnumerator IERotateEnemy(float chaseSpeed)
+    IEnumerator IERotateEnemy(float chaseSpeed) //Rotate after time
     {
         yield return new WaitForSecondsRealtime(0.35f);
         Debug.Log("Rotate Enemy");
@@ -175,13 +178,13 @@ public class Entity : MonoBehaviour, IKnockbackable, IDamageable
         Core.Movement.SetVelocity(chaseSpeed, facingDirection);
     }
 
-    private void HandleEffectsPositionOnFlip()
+    private void HandleEffectsPositionOnFlip() //Handle the position of the detecting effect
     {
         interrogationEffects.localPosition = new Vector3(-interrogationEffects.localPosition.x, interrogationEffects.localPosition.y, 0f);
         interrogationEffects.Rotate(0f, 180f, 0f);
     }
 
-    public virtual void OnDrawGizmos()
+    public virtual void OnDrawGizmos() //Debug purpose
     {
         Gizmos.DrawLine(wallCheck.position, wallCheck.position + (Vector3)(Vector2.right * facingDirection * entityData.wallCheckDistance));
         
@@ -196,16 +199,16 @@ public class Entity : MonoBehaviour, IKnockbackable, IDamageable
         Gizmos.DrawWireSphere(playerCheck.position + (Vector3)(Vector2.right), entityData.maxAgroDistance);
     }
 
-    public virtual void Damage(float amount)
+    public virtual void Damage(int amount) //Damge entity
     {
         currentHealth -= amount;
     }
-    public virtual void Knockback(float knockbackStrength, Vector2 bombPosition)
+    public virtual void Knockback(float knockbackStrength, Vector2 bombPosition) //Handle entity knockback
     {
         Core.Combat.Knockback(knockbackStrength, bombPosition);
     }
 
-    public void PlayerIsDead()
+    public void PlayerIsDead() //Set player dead
     {
         isPlayerAlive = false;
         EventManager.OnPlayerDeath -= PlayerIsDead;

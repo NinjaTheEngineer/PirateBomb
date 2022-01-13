@@ -9,7 +9,7 @@ public class Knockbackable : MonoBehaviour, IKnockbackable
 
     public Rigidbody2D rb;
 
-    public void Knockback(float knockbackStrength, Vector2 bombPosition)
+    public void Knockback(float knockbackStrength, Vector2 bombPosition) //Handle knockback
     {
         Vector2 angle = new Vector2(bombPosition.x - transform.position.x, bombPosition.y - transform.position.y).normalized;
         Vector2 rbVelocity;
@@ -37,7 +37,7 @@ public class Knockbackable : MonoBehaviour, IKnockbackable
         throw new System.NotImplementedException();
     }
 
-    private bool TargetAndBombHaveSameHeight(Vector2 targetPosition, Vector2 bombPosition)
+    private bool TargetAndBombHaveSameHeight(Vector2 targetPosition, Vector2 bombPosition) //Check if target at the same height
     {
         return bombPosition.y + 1 > targetPosition.y;
     }
